@@ -1,0 +1,23 @@
+{
+  "name": "butterlove-music-app",
+  "version": "1.0.0",
+  "description": "Romantic Butterfly & Love Themed Music App for Couples",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "music",
+    "couples",
+    "love",
+    "butterfly",
+    "apk",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "qrcode": "^1.5.4"
+  }
+}

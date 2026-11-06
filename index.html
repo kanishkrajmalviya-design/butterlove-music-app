@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="referrer" content="no-referrer" />
+  <title>ButterLove - Couples Music</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#ff3377" />
+  <meta name="description" content="Romantic Butterfly & Love Themed Music App for Couples" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Animated Background Canvas -->
+  <canvas id="butterflyCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="couple-info" onclick="App.toggleInlineNameEdit(event)">
+        <div class="couple-avatar">
+          <div class="couple-avatar-inner">🦋</div>
+        </div>
+        <div class="couple-names">
+          <div class="couple-title">
+            <span id="coupleTitleText">Your Name <span class="heart-icon">💖</span> Partner Name</span>
+            <button class="inline-edit-btn" onclick="App.toggleInlineNameEdit(event)" title="Edit Names">✏️</button>
+          </div>
+          <div class="couple-days" id="coupleDaysText">365 Days Together in Love 🦋</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="App.toggleInlineNameEdit(event)" title="Quick Edit Names">✏️</button>
+        <button class="icon-btn" onclick="App.openSleepTimerModal()" title="Sleep Timer">🌙</button>
+        <button class="icon-btn" onclick="App.openCoupleModal()" title="Couple Profile">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Quick Editable Form (Toggled directly from header or on-tap) -->
+    <div class="quick-names-form" id="quickNamesForm" style="display: none;">
+      <div class="form-title">
+        <span>💑</span> <span>Enter / Edit Couple Names</span>
+      </div>
+      <div class="names-row">
+        <input type="text" id="quickP1" class="form-input quick-input" placeholder="Your Name" />
+        <span class="heart-icon" style="color:var(--primary-pink); font-size:16px;">💖</span>
+        <input type="text" id="quickP2" class="form-input quick-input" placeholder="Partner's Name" />
+      </div>
+      <div class="form-actions-row">
+        <button class="save-names-btn" onclick="App.saveQuickNames()">Save Couple Names 💕</button>
+        <button class="cancel-names-btn" onclick="App.toggleInlineNameEdit()">Close</button>
+      </div>
+    </div>
+
+    <!-- Home View -->
+    <div id="homeView">
+      <!-- Romantic Hero Card -->
+      <section class="hero-card">
+        <div class="hero-quote">"Every heartbeat whispers your name..."</div>
+        <div class="hero-pinned-song">
+          <div class="pinned-left">
+            <span class="pinned-tag">Our Song</span>
+            <div class="pinned-title" id="pinnedSongTitle">Kesariya - Pritam & Arijit Singh</div>
+          </div>
+          <button class="pinned-play" onclick="App.playOurSong()" title="Play Our Song">▶</button>
+        </div>
+      </section>
+
+      <!-- Search Box -->
+      <div class="search-wrapper">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" class="search-input" placeholder="Search any love song, artist, romantic track..." />
+          <button id="clearSearch" class="clear-search-btn">✕</button>
+        </div>
+      </div>
+
+      <!-- Mood Filters -->
+      <div class="mood-scroll">
+        <button class="mood-pill active" data-mood="all">💖 All Songs (170+)</button>
+        <button class="mood-pill" data-mood="trending">🔥 Latest & Trending</button>
+        <button class="mood-pill" data-mood="bollywood">🇮🇳 Bollywood Romance</button>
+        <button class="mood-pill" data-mood="punjabi">🌾 Punjabi Love</button>
+        <button class="mood-pill" data-mood="global">🌍 Global Hits</button>
+        <button class="mood-pill" data-mood="candlelight">🕯️ Candlelight</button>
+        <button class="mood-pill" data-mood="latenight">🌙 Late Night Lo-Fi</button>
+        <button class="mood-pill" data-mood="slowdance">💃 Slow Dance</button>
+      </div>
+
+      <!-- Featured Playlists -->
+      <div class="section-header">
+        <h2 class="section-title">🦋 Couple Playlists</h2>
+        <span class="section-subtitle">Specially Curated</span>
+      </div>
+
+      <div class="featured-scroll">
+        <div class="playlist-card" onclick="App.switchTab('favorites')">
+          <div class="playlist-thumb-box">
+            <img src="assets/images/cover_soulmates.jpg" class="playlist-thumb" alt="Our Favorites" />
+            <div class="playlist-overlay">
+              <div class="playlist-play-icon">💖</div>
+            </div>
+          </div>
+          <div class="playlist-name">Our Love Vault</div>
+          <div class="playlist-desc">Couple Shared Favorites</div>
+        </div>
+
+        <div class="playlist-card" onclick="document.querySelector('[data-mood=bollywood]').click()">
+          <div class="playlist-thumb-box">
+            <img src="assets/images/cover_romantic_sunset.jpg" class="playlist-thumb" alt="Bollywood Love" />
+            <div class="playlist-overlay">
+              <div class="playlist-play-icon">▶</div>
+            </div>
+          </div>
+          <div class="playlist-name">Bollywood Romance</div>
+          <div class="playlist-desc">Arijit & Shreya Hits</div>
+        </div>
+
+        <div class="playlist-card" onclick="document.querySelector('[data-mood=candlelight]').click()">
+          <div class="playlist-thumb-box">
+            <img src="assets/images/cover_sweet_romance.jpg" class="playlist-thumb" alt="Candlelight" />
+            <div class="playlist-overlay">
+              <div class="playlist-play-icon">▶</div>
+            </div>
+          </div>
+          <div class="playlist-name">Candlelight Date</div>
+          <div class="playlist-desc">Acoustic & Soft Melodies</div>
+        </div>
+
+        <div class="playlist-card" onclick="document.querySelector('[data-mood=latenight]').click()">
+          <div class="playlist-thumb-box">
+            <img src="assets/images/cover_pillow_talk.jpg" class="playlist-thumb" alt="Late Night" />
+            <div class="playlist-overlay">
+              <div class="playlist-play-icon">▶</div>
+            </div>
+          </div>
+          <div class="playlist-name">Late Night Pillow Talk</div>
+          <div class="playlist-desc">Lo-Fi & Midnight Beats</div>
+        </div>
+      </div>
+
+      <!-- Live Songs List -->
+      <div class="section-header">
+        <h2 class="section-title" id="songsHeaderTitle">Trending Love Songs</h2>
+        <span class="section-subtitle">Real-time Free Stream</span>
+      </div>
+
+      <div class="songs-list" id="songsList">
+        <!-- Songs dynamically rendered by app.js -->
+      </div>
+    </div>
+
+    <!-- Favorites & Playlists View -->
+    <div id="favoritesView" style="display: none; padding-top: 10px;">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">🎵 Couple Playlists</h2>
+          <span class="section-subtitle">Created with Love 💕</span>
+        </div>
+        <button class="create-playlist-header-btn" onclick="App.openCreatePlaylistModal()">➕ New Playlist</button>
+      </div>
+
+      <!-- Playlist Cards Scroll -->
+      <div class="playlists-cards-scroll" id="playlistsCardsScroll">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="section-header" style="margin-top: 12px;">
+        <h2 class="section-title" id="activePlaylistTitle">💖 Our Love Vault</h2>
+        <div style="display: flex; gap: 8px;">
+          <button class="icon-btn" onclick="App.playActivePlaylist()" title="Play All Songs">▶ Play</button>
+          <button class="icon-btn" onclick="App.deleteActivePlaylist()" id="deletePlaylistBtn" title="Delete Playlist" style="display: none;">🗑️</button>
+        </div>
+      </div>
+      <div class="songs-list" id="favoritesList">
+        <!-- Rendered by app.js -->
+      </div>
+    </div>
+
+    <!-- Couple Space View -->
+    <div id="coupleView" style="display: none; padding: 20px;">
+      <div class="hero-card" style="margin: 0 0 20px 0; text-align: center;">
+        <div style="font-size: 36px; margin-bottom: 6px;">💑</div>
+        <h2 style="font-size: 19px; font-weight: 700; margin-bottom: 4px;">Edit Couple Names & Story</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Set your names here. They will appear on the music player & dedications!</p>
+
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Partner 1 (Your Name)</label>
+          <input type="text" class="form-input" id="spaceP1Input" placeholder="Enter Your Name..." />
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Partner 2 (Partner's Name)</label>
+          <input type="text" class="form-input" id="spaceP2Input" placeholder="Enter Partner's Name..." />
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">Relationship / Anniversary Date</label>
+          <input type="date" class="form-input" id="spaceDateInput" />
+        </div>
+        <button class="submit-btn" style="margin-top: 10px;" onclick="App.saveSpaceProfile()">Update Couple Names 💕</button>
+      </div>
+
+      <div class="hero-card" style="margin: 0;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #fff;">💌 Love Dedications</h3>
+        <p style="font-size: 13px; color: var(--text-dim); line-height: 1.5;">
+          Tap the <b>💌</b> icon next to any song in the app to attach a sweet love note from you to your partner.
+        </p>
+      </div>
+    </div>
+
+    <!-- Floating Mini Player -->
+    <div class="mini-player" id="miniPlayer" style="display: none;" onclick="App.openNowPlaying()">
+      <div class="mini-left">
+        <img id="miniCover" src="assets/icons/icon-192.png" class="mini-cover" alt="Album Cover" />
+        <div class="mini-info">
+          <div class="mini-title" id="miniTitle">Select a love song</div>
+          <div class="mini-artist" id="miniArtist">ButterLove Music</div>
+        </div>
+      </div>
+      <div class="mini-controls" onclick="event.stopPropagation()">
+        <button class="mini-btn mini-play-btn" onclick="App.togglePlay()">
+          <span id="miniPlayIcon">▶</span>
+        </button>
+        <button class="mini-btn" onclick="App.nextTrack()">⏭</button>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-tab active" data-tab="home" onclick="App.switchTab('home')">
+        <span class="nav-icon">🦋</span>
+        <span>Home</span>
+      </button>
+      <button class="nav-tab" data-tab="favorites" onclick="App.switchTab('favorites')">
+        <span class="nav-icon">🎵</span>
+        <span>Playlists</span>
+      </button>
+      <button class="nav-tab" data-tab="couple" onclick="App.switchTab('couple')">
+        <span class="nav-icon">💑</span>
+        <span>Couples</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Fullscreen Now Playing Modal -->
+  <div class="now-playing-modal" id="nowPlayingModal">
+    <div class="np-header">
+      <button class="icon-btn" onclick="App.closeNowPlaying()">✕</button>
+      <span class="np-header-title">Now Playing 🦋</span>
+      <button class="icon-btn" onclick="App.pinCurrentAsOurSong()" title="Pin as Our Song">📌</button>
+    </div>
+
+    <div class="np-cover-container">
+      <div class="np-cover-frame">
+        <img id="npCover" src="assets/icons/icon-512.png" class="np-cover-img" alt="Cover Artwork" />
+        <div class="np-center-butterfly">🦋</div>
+      </div>
+      <div class="np-dedication" id="npDedication" style="display: none;">
+        💌 Dedicated with love
+      </div>
+    </div>
+
+    <div class="np-track-meta">
+      <div>
+        <div class="np-title" id="npTitle">Song Title</div>
+        <div class="np-artist" id="npArtist">Artist Name</div>
+      </div>
+      <button class="song-action-btn" id="npLoveBtn" style="font-size: 24px;" onclick="App.toggleLove(event, App.playlist[App.currentIndex]?.id)">🤍</button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <input type="range" class="seek-slider" id="seekSlider" min="0" max="100" step="0.1" value="0" />
+      <div class="time-row">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">4:22</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="np-controls">
+      <button class="np-btn" id="npShuffleBtn" onclick="App.toggleShuffle()" title="Shuffle">🔀</button>
+      <button class="np-btn" onclick="App.prevTrack()" title="Previous">⏮</button>
+      <button class="np-play-btn" onclick="App.togglePlay()" title="Play/Pause">
+        <span id="npPlayIcon">▶</span>
+      </button>
+      <button class="np-btn" onclick="App.nextTrack()" title="Next">⏭</button>
+      <button class="np-btn" id="npRepeatBtn" onclick="App.toggleRepeat()" title="Repeat">🔁</button>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+      <button class="mood-pill" style="background: linear-gradient(135deg, #ff0055, #9d4edd); color: #fff; border: none; font-weight: 700;" onclick="App.openFullSong()" title="Listen to full 4-5 min track">▶ Full Song</button>
+      <button class="mood-pill" onclick="App.openDedicateModal(App.playlist[App.currentIndex]?.id)">💌 Dedicate</button>
+      <button class="mood-pill" onclick="App.openSleepTimerModal()">🌙 Sleep Timer</button>
+    </div>
+  </div>
+
+  <!-- Couple Profile Modal -->
+  <div class="modal-overlay" id="coupleModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">💑 Couple Settings</div>
+        <button class="icon-btn" onclick="App.closeCoupleModal()">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Partner 1 Name</label>
+        <input type="text" class="form-input" id="partner1Input" placeholder="e.g. Raj" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Partner 2 Name</label>
+        <input type="text" class="form-input" id="partner2Input" placeholder="e.g. Simran" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Love Anniversary / Date Together</label>
+        <input type="date" class="form-input" id="startDateInput" />
+      </div>
+      <button class="submit-btn" onclick="App.saveCoupleProfile()">Save Love Profile 💕</button>
+    </div>
+  </div>
+
+  <!-- Dedicate Song Modal -->
+  <div class="modal-overlay" id="dedicateModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">💌 Dedicate Song</div>
+        <button class="icon-btn" onclick="App.closeDedicateModal()">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 12px;">
+        Dedicate <span id="dedicateSongName" style="color: var(--soft-pink); font-weight:600;"></span> to your partner with a sweet message:
+      </p>
+      <input type="hidden" id="dedicateSongId" />
+      <div class="form-group">
+        <label class="form-label">From (Your Name)</label>
+        <input type="text" class="form-input" id="dedicateSender" placeholder="Your name..." />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sweet Love Note</label>
+        <input type="text" class="form-input" id="dedicateMsg" placeholder="e.g. This song reminds me of our first date... 💕" />
+      </div>
+      <button class="submit-btn" onclick="App.submitDedication()">Send Dedication 💖</button>
+    </div>
+  </div>
+
+  <!-- Sleep Timer Modal -->
+  <div class="modal-overlay" id="sleepModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">🌙 Couple Sleep Timer</div>
+        <button class="icon-btn" onclick="App.closeSleepTimerModal()">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 14px;">
+        Fall asleep together listening to your favorite romantic songs:
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+        <button class="mood-pill" style="justify-content:center;" onclick="App.setSleepTimer(15)">15 Minutes</button>
+        <button class="mood-pill" style="justify-content:center;" onclick="App.setSleepTimer(30)">30 Minutes</button>
+        <button class="mood-pill" style="justify-content:center;" onclick="App.setSleepTimer(45)">45 Minutes</button>
+        <button class="mood-pill" style="justify-content:center;" onclick="App.setSleepTimer(60)">60 Minutes</button>
+      </div>
+      <button class="submit-btn" style="background: rgba(255,255,255,0.1); box-shadow:none;" onclick="App.setSleepTimer(0)">Turn Off Timer</button>
+    </div>
+  </div>
+
+  <!-- Create Playlist Modal -->
+  <div class="modal-overlay" id="createPlaylistModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">➕ Create New Playlist</div>
+        <button class="icon-btn" onclick="App.closeCreatePlaylistModal()">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Playlist Name</label>
+        <input type="text" class="form-input" id="newPlaylistNameInput" placeholder="e.g. Long Drive Romance, Wedding Vibes..." />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Choose Theme Emoji</label>
+        <div style="display: flex; gap: 10px; font-size: 24px; padding: 6px 0;" id="emojiPickerRow">
+          <span class="emoji-opt active" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('💖', this)">💖</span>
+          <span class="emoji-opt" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('🦋', this)">🦋</span>
+          <span class="emoji-opt" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('🌹', this)">🌹</span>
+          <span class="emoji-opt" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('🌙', this)">🌙</span>
+          <span class="emoji-opt" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('✨', this)">✨</span>
+          <span class="emoji-opt" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('🚗', this)">🚗</span>
+          <span class="emoji-opt" style="cursor:pointer;" onclick="App.selectPlaylistEmoji('💃', this)">💃</span>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="App.saveNewPlaylist()">Create Playlist 💕</button>
+    </div>
+  </div>
+
+  <!-- Add to Playlist Modal -->
+  <div class="modal-overlay" id="addToPlaylistModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">➕ Add to Playlist</div>
+        <button class="icon-btn" onclick="App.closeAddToPlaylistModal()">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 8px;">
+        Add <b id="addToSongTitle" style="color:var(--soft-pink);">Song</b> to playlist:
+      </p>
+      <input type="hidden" id="addToSongId" />
+      <div class="playlist-picker-list" id="playlistPickerList">
+        <!-- Dynamically rendered -->
+      </div>
+      <button class="submit-btn" style="background: rgba(255,255,255,0.08); box-shadow:none; margin-top:6px;" onclick="App.openCreatePlaylistModal()">➕ Create Another Playlist</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/crypto-js.js"></script>
+  <script src="js/playlists.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/couple.js"></script>
+  <script src="js/butterflies.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
